@@ -93,7 +93,6 @@
 
     function renderReversedElements() {
         var reverseContainer = document.getElementById('reverseContainer');
-        debugger;
         var reversedChicagoStartups = [];
         if (reverseContainer) {
             if (reverseContainer.hasChildNodes()) {
@@ -111,7 +110,7 @@
             }
             else {
                 //TODO:: REPLACE [chicagoStartups.reverse()] WITH A FUNCTION CALLED "chicagoStartupsReverse"
-                chicagoStartups.chicagoStartupsReverse().forEach( function(startup) {
+                chicagoStartups.reverse().forEach( function(startup) {
                     var childDiv = document.createElement('div');
                     var text = document.createTextNode(startup);
                     childDiv.appendChild(text);
