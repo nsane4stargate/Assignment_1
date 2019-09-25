@@ -1,4 +1,5 @@
 var colors = ['red', 'blue', 'gold'];
+var elementType = 'div';
 var chicagoStartups = [
     '  Interior   Define  ',
     'Classkick',
@@ -17,7 +18,17 @@ var chicagoStartups = [
     'Shiftgig',
     'ParkWhiz'
 ];
+var copiedStartupNames;
 
+/* Variable methods */
+var htmlElement = function(x){ return x };
+
+var copyArray = function(x){ return x.slice(0) };
+var flags = {
+    displayInstructions: true
+};
+
+/* Methods */
 function clearDocument() {
     var rootDiv = document.getElementById('rootContainer');
     if (rootDiv) {
@@ -35,7 +46,7 @@ function initDocument() {
     companyNamesContainer.id = 'startupsContainer'
     chicagoStartups.forEach( function(chicagoStartup, index) {
         var childDiv = document.createElement('div');
-        var text = document.createTextNode(index.toString().concat(' .) ').concat(chicagoStartup));
+        var text = document.createTextNode(index.toString().concat(' .) ').concat(chicagoStartup).concat('    '));
         childDiv.appendChild(text);
         companyNamesContainer.appendChild(childDiv);
     });
@@ -54,7 +65,7 @@ function renderReversedElements() {
             }
             reversedChicagoStartups.forEach(function(chicagoStartup, index) {
                 console.log(chicagoStartup);
-                var childDiv = document.createElement('div');
+                var childDiv = document.createElement(elementType);
                 var text = document.createTextNode(chicagoStartup);
                 childDiv.appendChild(text);
                 reverseContainer.appendChild(childDiv);
@@ -63,7 +74,7 @@ function renderReversedElements() {
         else {
             /* REPLACED [chicagoStartups.reverse()] WITH A FUNCTION CALLED "chicagoStartupsReverse" */
             chicagoStartupsReverse().forEach( function(startup) {
-                var childDiv = document.createElement('div');
+                var childDiv = document.createElement(elementType);
                 var text = document.createTextNode(startup);
                 childDiv.appendChild(text);
                 reverseContainer.appendChild(childDiv);
@@ -96,25 +107,33 @@ function cleanAndCountCharacters() {
         DONT FORGET TO REMOVE LEADING AND TRAILING WHITESPACES AS WELL
     */
     var container = document.getElementById('startupsContainer');
-    var count, pattern = new RegExp(/[^A-Z a-z]/g);
+    var count, pattern = new RegExp(/[^A-Z a-z]/g), arr;
     if(container.hasChildNodes){    
         while(container.hasChildNodes()){
             container.removeChild(container.lastChild);
         }
     }
     
-    chicagoStartups.forEach(function(chicagoStartup,index,object){
+    if(copiedStartupNames != null){
+        arr = copiedStartupNames;
+    }else{
+        arr = chicagoStartups;
+    }
+    arr.forEach(function(arr,index,object){
         count = (object[index].match(pattern) || []).length;
         count += (object[index].match(/(^\s)/g) || []).length;
-        object[index] = object[index].replace(/[^A-Z a-z]/g, "");
+        object[index] = object[index].replace(pattern, "");
         count += (object[index].match(/\s+$/g) || []).length;
        
         object[index] =  object[index].trimRight().trimLeft();
-        var childDiv = document.createElement('div');
+        var childDiv = document.createElement(elementType);
         var text = document.createTextNode(index.toString().concat(' .) ').concat(object[index]).concat(": ").concat(count).concat(" occurrences!"));
         childDiv.appendChild(text);
         container.appendChild(childDiv);
     });
+
+    /* Set copiedStartupNames[] */
+    if(copiedStartupNames == null) { copiedStartupNames = copyArray(chicagoStartups);}
 }
 
 function initReverse() {
@@ -132,37 +151,84 @@ function initReverse() {
 
 function toggleDisplay() {
     /*
-    TODO: REVIEW THE CODE IN THE PROVIDED REVERSE EXAMPLE, USE JAVASCRIPT TO ADD A CLICKABLE BUTTON 
+     REVIEW THE CODE IN THE PROVIDED REVERSE EXAMPLE, USE JAVASCRIPT TO ADD A CLICKABLE BUTTON 
     CALLED "Toggle Display" ... WHEN THE USER CLICKS THE BUTTON, IT RENDERS THE DISPLAY OF THE COMPANY NAMES 
     FROM VERTICAL, TO HORIZONTAL.
     IF THE USER CLICKS THE TOGGLE BUTTON AGAIN THE NAMES SHOULD ONCE AGAIN BE DISPLAYED VERTICALLY.
-
-    TIPS: 
-        1.  MAKE SURE TO READ AND UNDERSTAND THE DIFFERENCE BETWEEN BLOCK ELEMENTS SUCH AS A DIV, 
-            AND INLINE ELEMENTS SUCH AS A SPAN.
-
-        2.  DIVIDE AND CONQUER.
-
-        3.  
     */
+    var startupsContainer = document.getElementById('startupsContainer');
+    var reversedContainer = document.getElementById('reverseContainer');
+    var copiedNames = copiedStartupNames;
+    var startups = chicagoStartups;
+    switch(elementType){
+
+        case 'div':
+            /* Remove current layout display for startupsContainer */
+            if(startupsContainer.hasChildNodes()){
+                while(startupsContainer.hasChildNodes()) {
+                    startupsContainer.removeChild(startupsContainer.lastChild);
+                }
+                toggleDisplayHelper(startupsContainer, 'span', copiedNames);
+            }
+
+            /* Remove current layout display for reversedContainer */
+            if(reversedContainer.hasChildNodes()){
+                while(reversedContainer.hasChildNodes()) {
+                    reversedContainer.removeChild(reversedContainer.lastChild);
+                }
+                toggleDisplayHelper(reversedContainer, 'span', startups);
+            }
+            elementType = htmlElement('span');
+            break;
+
+        case 'span':
+             /* Remove current layout display for startupsContainer */
+             if(startupsContainer.hasChildNodes()){
+                while(startupsContainer.hasChildNodes()) {
+                    startupsContainer.removeChild(startupsContainer.lastChild);
+                }
+                toggleDisplayHelper(startupsContainer, 'div', copiedNames);
+            }
+
+            /* Remove current layout display for reversedContainer */
+            if(reversedContainer.hasChildNodes()){
+                while(reversedContainer.hasChildNodes()) {
+                    reversedContainer.removeChild(reversedContainer.lastChild);
+                }
+                toggleDisplayHelper(reversedContainer, 'div', startups);
+            }
+            elementType = htmlElement('div');
+            break;
+    }
+}
+
+function toggleDisplayHelper(container, htmlElement, arr){
+    if(container==startupsContainer){
+        if(arr == null){ 
+            arr = chicagoStartups;
+        };
+    }
+    arr.forEach( function(chicagoStartup, index) {
+        var childDiv = document.createElement(htmlElement);
+        var text = document.createTextNode(index.toString().concat(' .) ').concat(chicagoStartup).concat('    '));
+        childDiv.appendChild(text);
+        container.appendChild(childDiv);
+    });
 }
 
 function run() {
     initDocument();
     initReverse();
 }
+
 run();
 
-var flags = {
-    displayInstructions: true
-};
-
-//TODO INVOKE THIS ANONYMOUS FUNCTION TO DISPLAY HOMEWORK INSTRUCTIONS IN THE CONSOLE
+/* INVOKED THIS ANONYMOUS FUNCTION TO DISPLAY HOMEWORK INSTRUCTIONS IN THE CONSOLE */
 (function() {
     if (flags.displayInstructions) {
         console.log(`
-                        
-                        MY GITHUB SOLUTION: https://github.com/nsane4stargate/Assignment_1
+                    
+                       MY SOLUTION: https://github.com/nsane4stargate/Assignment_1
 
                         Feel free to complete the exercises in whatever order you like.  
 
