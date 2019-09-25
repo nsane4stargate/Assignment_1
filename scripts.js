@@ -62,9 +62,9 @@ function renderReversedElements() {
         else {
             //TODO:: REPLACE [chicagoStartups.reverse()] WITH A FUNCTION CALLED "chicagoStartupsReverse"
             chicagoStartupsReverse().forEach( function(startup) {
-                //var childDiv = document.createElement('div');
-                //var text = document.createTextNode(startup);
-                //childDiv.appendChild(text);
+                var childDiv = document.createElement('div');
+                var text = document.createTextNode(startup);
+                childDiv.appendChild(text);
                 reverseContainer.appendChild(childDiv);
             });
         }
