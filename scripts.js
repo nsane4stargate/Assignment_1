@@ -32,6 +32,7 @@ function initDocument() {
     var rootDiv = document.createElement('div');
     rootDiv.id = 'rootContainer';
     var companyNamesContainer = document.createElement('div');
+    companyNamesContainer.id = 'startupsContainer'
     chicagoStartups.forEach( function(chicagoStartup, index) {
         var childDiv = document.createElement('div');
         var text = document.createTextNode(index.toString().concat(' .) ').concat(chicagoStartup));
@@ -60,7 +61,7 @@ function renderReversedElements() {
             });
         }
         else {
-            //TODO:: REPLACE [chicagoStartups.reverse()] WITH A FUNCTION CALLED "chicagoStartupsReverse"
+            /* REPLACED [chicagoStartups.reverse()] WITH A FUNCTION CALLED "chicagoStartupsReverse" */
             chicagoStartupsReverse().forEach( function(startup) {
                 var childDiv = document.createElement('div');
                 var text = document.createTextNode(startup);
@@ -74,15 +75,8 @@ function renderReversedElements() {
 function chicagoStartupsReverse() {
     var reversedStartups = chicagoStartups;
     /*
-        TODO: REVERSE THE CONTENTS OF THE ARRAY WITHOUT USING THE BUILT IN REVERSE METHOD
+        REVERSE THE CONTENTS OF THE ARRAY WITHOUT USING THE BUILT IN REVERSE METHOD
               RETURN THE REVERSED ARRAY
-
-        TIPS: 
-            1.  REVIEW JAVASCRIPT ARRAY DATA STRUCTURE AND THE BUILTIN METHODS PROVIDED TO ALL ARRAYS
-
-            2.  THIS IS A COMMON JOB INTERVIEW QUESTION, THAT SHOULD BE SOLVABLE BASED ON AN UNDERSTANDING OF
-                DATA STRUTUCTURES REGARDLESS OF THE PROGRAMMING LANGUAGE
-    
     */
     var i = 0, temp, reversedIndex = reversedStartups.length-1;
     for(; i < reversedStartups.length/2; i++){
@@ -95,13 +89,32 @@ function chicagoStartupsReverse() {
 }
 
 function cleanAndCountCharacters() {
-    console.log('CLEAN AND COUNT CHARACTERS');
+   console.log('CLEAN AND COUNT CHARACTERS');
     /*
-        TODO: REMOVES ANY SPECIAL CHARACTERS FROM EACH COMPANY NAME AND
-          DISPLAYS THE NUMBER OF REMAINING CHARACTERS NEXT TO THE FULL WORD.
-          DONT FORGET TO REMOVE LEADING AND TRAILING WHITESPACES AS WELL
+        REMOVES ANY SPECIAL CHARACTERS FROM EACH COMPANY NAME AND
+        DISPLAYS THE NUMBER OF REMAINING CHARACTERS NEXT TO THE FULL WORD.
+        DONT FORGET TO REMOVE LEADING AND TRAILING WHITESPACES AS WELL
     */
-
+    var container = document.getElementById('startupsContainer');
+    var count, pattern = new RegExp(/[^A-Z a-z]/g);
+    if(container.hasChildNodes){    
+        while(container.hasChildNodes()){
+            container.removeChild(container.lastChild);
+        }
+    }
+    
+    chicagoStartups.forEach(function(chicagoStartup,index,object){
+        count = (object[index].match(pattern) || []).length;
+        count += (object[index].match(/(^\s)/g) || []).length;
+        object[index] = object[index].replace(/[^A-Z a-z]/g, "");
+        count += (object[index].match(/\s+$/g) || []).length;
+       
+        object[index] =  object[index].trimRight().trimLeft();
+        var childDiv = document.createElement('div');
+        var text = document.createTextNode(index.toString().concat(' .) ').concat(object[index]).concat(": ").concat(count).concat(" occurrences!"));
+        childDiv.appendChild(text);
+        container.appendChild(childDiv);
+    });
 }
 
 function initReverse() {
@@ -148,10 +161,8 @@ var flags = {
 (function() {
     if (flags.displayInstructions) {
         console.log(`
-                        ASSUMPTIONS: !!! NO JQUERY !!! 
-                                     TODO INDICATES THAT A SOLUTION IS REQUIRED
-                                     PLEASE INCLUDE YOUR GITHUB URL AS A COMMENT
-                                     EX. // https://github.com/Chandler-Gegg/javascript101.git
+                        
+                        MY GITHUB SOLUTION: https://github.com/nsane4stargate/Assignment_1
 
                         Feel free to complete the exercises in whatever order you like.  
 
@@ -180,4 +191,4 @@ var flags = {
                     `);
     }
     
-});
+}());
