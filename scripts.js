@@ -18,6 +18,7 @@
         'ParkWhiz',
         'ParkWhiz2'
     ];
+    var 
 
     function clearDocument() {
         var rootDiv = document.getElementById('rootContainer');
@@ -33,6 +34,7 @@
         var rootDiv = document.createElement('div');
         rootDiv.id = 'rootContainer';
         var companyNamesContainer = document.createElement('div');
+        companyNamesContainer.id = 'startupsContainer';
         chicagoStartups.forEach( function(chicagoStartup, index) {
             var childDiv = document.createElement('div');
             var text = document.createTextNode(index.toString().concat(' .) ').concat(chicagoStartup));
@@ -95,11 +97,20 @@
             DISPLAYS THE NUMBER OF REMAINING CHARACTERS NEXT TO THE FULL WORD.
             DONT FORGET TO REMOVE LEADING AND TRAILING WHITESPACES AS WELL
         */
-       var x;
-       for(x in chicagoStartups){
-           chicagoStartups[x].replace(/[^\w\s]/gi, '');
-       }
 
+       /* var container = document.getElementById('rootContainer');
+        if(container.hasChildNodes){
+            while(container.hasChildNodes()){
+                container.removeChild(container.lastChild);
+            }
+        }
+        */
+        var x, startup, update, container = document.getElementById('startupsContainer');
+        for(x in chicagoStartups){
+           startup = chicagoStartups[x];
+           update = startup.replace(/[^A-Z a-z]/g, "").trimLeft().trimRight();
+           chicagoStartups[x] = chicagoStartups[x].replace(/[^A-Z a-z]/g, "");
+       }
     }
     
     function initReverse() {
